@@ -14,7 +14,13 @@ export type Story = {
   id: number;
   by: string;
   title: string;
+  url?: string;
   score: number;
   time: number;
-  url?: string;
+  descendants?: number;
+  text?: string;
+  kids?: number[];
+  type: "story";
+  deleted?: boolean; 
+  dead?: boolean;
 };

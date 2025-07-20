@@ -1,7 +1,9 @@
 import { fetchStory } from "@/lib/hn-api";
 import { formatDistanceToNow } from "date-fns";
 import { notFound } from "next/navigation";
-import { Metadata } from "next";
+import Comment from "@/components/Comment";
+import FakeCommentBox from "@/components/FakeCommentBox";
+import type { Metadata } from "next";
 
 type Props = {
   params: { id: string };
@@ -13,7 +15,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   return {
     title: story.title,
-    description: `${story.score} points by ${story.by}`,
+    description: `Posted by ${story.by}, ${story.score} points, ${story.kids?.length || 0} comments`,
   };
 }
 
@@ -22,22 +24,49 @@ export default async function StoryPage({ params }: Props) {
   if (!story) return notFound();
 
   return (
-    <main className="max-w-2xl mx-auto p-4 space-y-4">
-      <h1 className="text-2xl font-bold">{story.title}</h1>
+    <main className="max-w-2xl mx-auto p-4 space-y-6">
+      {/* Title and meta */}
+      <h1 className="text-3xl font-bold">{story.title}</h1>
       <p className="text-sm text-muted-foreground">
-        {story.score} points by {story.by} •{" "}
+        {story.score} points by <span className="font-medium">{story.by}</span> •{" "}
         {formatDistanceToNow(new Date(story.time * 1000), { addSuffix: true })}
       </p>
+
+      {/* Render HTML body for Ask/Show posts */}
+      {story.text && (
+        <article
+          className="prose dark:prose-invert mb-6"
+          dangerouslySetInnerHTML={{ __html: story.text }}
+        />
+      )}
+
+      {/* External link */}
       {story.url && (
         <a
           href={story.url}
           target="_blank"
           rel="noopener noreferrer"
-          className="text-blue-500 underline"
+          className="inline-block rounded-md bg-blue-600 px-5 py-3 text-white hover:bg-blue-700 transition"
         >
-          Visit original source
+          Visit Original Site
         </a>
       )}
+
+      {/* Comments */}
+      <section>
+        <h2 className="text-xl font-semibold mt-8 mb-4">Comments</h2>
+        {story.kids?.length ? (
+          story.kids.map((kidId) => <Comment key={kidId} id={kidId} />)
+        ) : (
+          <p className="text-muted-foreground">No comments yet.</p>
+        )}
+      </section>
+
+      {/* Demo comment input */}
+      <section className="mt-10">
+        <h3 className="text-lg font-semibold mb-2">Add a comment (Demo only)</h3>
+        <FakeCommentBox />
+      </section>
     </main>
   );
 }
