@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import Comment from "@/components/Comment";
 import FakeCommentBox from "@/components/FakeCommentBox";
 import type { Metadata } from "next";
+import ScoreBadge from "@/components/post/ScoreBagde";
 
 type Props = {
   params: { id: string };
@@ -15,7 +16,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   return {
     title: story.title,
-    description: `Posted by ${story.by}, ${story.score} points, ${story.kids?.length || 0} comments`,
+    description: `Posted by ${story.by}, ${story.score} points, ${
+      story.kids?.length || 0
+    } comments`,
   };
 }
 
@@ -27,10 +30,8 @@ export default async function StoryPage({ params }: Props) {
     <main className="max-w-2xl mx-auto p-4 space-y-6">
       {/* Title and meta */}
       <h1 className="text-3xl font-bold">{story.title}</h1>
-      <p className="text-sm text-muted-foreground">
-        {story.score} points by <span className="font-medium">{story.by}</span> •{" "}
-        {formatDistanceToNow(new Date(story.time * 1000), { addSuffix: true })}
-      </p>
+      {/* story score */}
+      <ScoreBadge score={story.score} by={story.by} time={story.time} />
 
       {/* Render HTML body for Ask/Show posts */}
       {story.text && (
@@ -64,7 +65,9 @@ export default async function StoryPage({ params }: Props) {
 
       {/* Demo comment input */}
       <section className="mt-10">
-        <h3 className="text-lg font-semibold mb-2">Add a comment (Demo only)</h3>
+        <h3 className="text-lg font-semibold mb-2">
+          Add a comment (Demo only)
+        </h3>
         <FakeCommentBox />
       </section>
     </main>
