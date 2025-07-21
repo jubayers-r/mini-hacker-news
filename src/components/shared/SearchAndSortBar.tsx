@@ -9,7 +9,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { debounce } from "@/utils/debouce";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 // or use custom debounce if lodash not used
 
 export type SortType = "top" | "new" | "comments" | "ask";

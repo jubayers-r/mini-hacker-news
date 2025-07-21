@@ -1,16 +1,17 @@
 import { fetchStory } from "@/lib/hn-api";
-import { formatDistanceToNow } from "date-fns";
 import { notFound } from "next/navigation";
 import Comment from "@/components/Comment";
 import FakeCommentBox from "@/components/FakeCommentBox";
 import type { Metadata } from "next";
 import ScoreBadge from "@/components/post/ScoreBagde";
 
-type Props = {
+type PageProps = {
   params: { id: string };
 };
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: PageProps): Promise<Metadata> {
   const story = await fetchStory(Number(params.id));
   if (!story) return { title: "Not found" };
 
@@ -22,7 +23,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-export default async function StoryPage({ params }: Props) {
+export default async function StoryPage({ params }: PageProps) {
   const story = await fetchStory(Number(params.id));
   if (!story) return notFound();
 

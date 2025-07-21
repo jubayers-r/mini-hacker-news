@@ -2,8 +2,6 @@
 
 
 import { Card } from "@/components/ui/card";
-import Link from "next/link";
-import { formatDistanceToNow } from "date-fns";
 import { motion } from "motion/react";
 import ScoreBadge from "@/components/post/ScoreBagde";
 import SearchAndSortBar, { SortType } from "@/components/shared/SearchAndSortBar";
